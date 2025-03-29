@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { Patient } from "@/type/patient";
+import { Patient } from "@/types/patient";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { HTMLInputTypeAttribute, useEffect, useState } from "react";

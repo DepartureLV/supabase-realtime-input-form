@@ -1,8 +1,4 @@
-import DeployButton from "@/components/deploy-button";
-import { EnvVarWarning } from "@/components/env-var-warning";
-import HeaderAuth from "@/components/header-auth";
 import { ThemeSwitcher } from "@/components/theme-switcher";
-import { hasEnvVars } from "@/utils/supabase/check-env-vars";
 import { Geist } from "next/font/google";
 import { ThemeProvider } from "next-themes";
 import Link from "next/link";
@@ -49,12 +45,16 @@ export default function RootLayout({
                   <Link href={"/"}>Agnos Assignment</Link>
                 </div>
                 <div className="flex gap-4">
-                  <Button variant={"outline"} className="w-full">
-                    Patient
-                  </Button>
-                  <Button variant={"outline"} className="w-full">
-                    Staff
-                  </Button>
+                  <a href="/patients">
+                    <Button variant={"outline"} className="w-full">
+                      Patient
+                    </Button>
+                  </a>
+                  <a href="/staff">
+                    <Button variant={"outline"} className="w-full">
+                      Staff
+                    </Button>
+                  </a>
                 </div>
               </div>
             </nav>

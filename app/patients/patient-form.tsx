@@ -1,8 +1,8 @@
 "use client";
 
 import PersonalForm from "@/components/personal-form";
-import { OnlineStatus } from "@/type/online_status";
-import { Patient } from "@/type/patient";
+import { OnlineStatus } from "@/types/online_status";
+import { Patient } from "@/types/patient";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";

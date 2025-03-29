@@ -1,10 +1,10 @@
 "use client";
 
-import { Patient } from "@/type/patient";
+import { Patient } from "@/types/patient";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import PersonalForm from "@/components/personal-form";
-import { OnlineStatus } from "@/type/online_status";
+import { OnlineStatus } from "@/types/online_status";
 import { CircleCheck } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
