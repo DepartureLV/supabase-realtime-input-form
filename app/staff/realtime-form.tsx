@@ -92,7 +92,8 @@ export default function RealtimeForm({
 
   return (
     <div className="flex flex-col gap-16">
-      <div className="w-full flex justify-end">
+      <div className="w-full flex flex-col justify-center items-end gap-2">
+        <span className="font-semibold">Patient status </span>
         <OnlineBadge status={status} />
       </div>
       {patientsData.map((p) => (
@@ -105,8 +106,11 @@ export default function RealtimeForm({
 function OnlineBadge({ status }: { status: OnlineStatus }) {
   if (status === "inactive") {
     return (
-      <div className="flex gap-2 items-center">
-        <div className="h-6 w-6 bg-yellow-700 rounded-full" />
+      <div className="flex gap-2 items-center text-yellow-400">
+        <div className="relative h-6 w-6">
+          <div className="absolute h-full w-full bg-yellow-400 rounded-full z-10" />
+          <div className="absolute h-full w-full bg-yellow-400 rounded-full animate-ping" />
+        </div>
         <span>{status}</span>
       </div>
     );
@@ -124,7 +128,10 @@ function OnlineBadge({ status }: { status: OnlineStatus }) {
   if (status === "editing") {
     return (
       <div className="flex gap-2 items-center">
-        <div className="h-6 w-6 bg-green-700 rounded-full" />
+        <div className="relative h-6 w-6">
+          <div className="absolute h-full w-full bg-green-700 rounded-full z-10" />
+          <div className="absolute h-full w-full bg-green-700 rounded-full animate-ping" />
+        </div>
         <span>{status}</span>
       </div>
     );
