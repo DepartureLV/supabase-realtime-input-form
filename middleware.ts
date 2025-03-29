@@ -1,8 +1,14 @@
-import { type NextRequest } from "next/server";
+import { userAgent, type NextRequest } from "next/server";
 import { updateSession } from "@/utils/supabase/middleware";
+import { v4 as uuidv4 } from 'uuid';
 
 export async function middleware(request: NextRequest) {
   return await updateSession(request);
+}
+
+export function getDevice(request: NextRequest) {
+  const { device } = userAgent(request);
+  return device;
 }
 
 export const config = {
