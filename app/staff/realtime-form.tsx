@@ -4,11 +4,15 @@ import { Patient } from "@/type/patient";
 import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import PersonalForm from "@/components/patient-form/personal-form";
+import { OnlineStatus } from "@/type/online_status";
+import { CircleCheck } from "lucide-react";
 
 type PresenceInfo = {
   presence_ref: string;
-  status: string;
-}
+  user: string;
+  id: string;
+  status: OnlineStatus;
+};
 
 export default function RealtimeForm({
   serverPosts,
@@ -16,6 +20,7 @@ export default function RealtimeForm({
   serverPosts: Patient[];
 }) {
   const [patientsData, setPatientData] = useState<Patient[]>(serverPosts);
+  const [status, setStatus] = useState<OnlineStatus>("inactive");
 
   const supabase = createClient();
 
@@ -27,13 +32,16 @@ export default function RealtimeForm({
 
     channel
       .on("presence", { event: "sync" }, () => {
-        const patientStatus = [];
+        let patientStatus: PresenceInfo[] = [];
 
         for (const status in channel.presenceState()) {
-          patientStatus.push((channel.presenceState()[status][0] as PresenceInfo).status);
+          patientStatus.push(
+            channel.presenceState()[status][0] as PresenceInfo
+          );
         }
 
-        console.log("patientStatus", patientStatus[0]);
+        setStatus(patientStatus[0].status);
+        console.log(patientStatus);
       })
       .subscribe();
 
@@ -84,9 +92,43 @@ export default function RealtimeForm({
 
   return (
     <div className="flex flex-col gap-16">
+      <div className="w-full flex justify-end">
+        <OnlineBadge status={status} />
+      </div>
       {patientsData.map((p) => (
-        <PersonalForm key={p.id} formData={p} />
+        <PersonalForm key={p.id} formData={p} disabled />
       ))}
     </div>
   );
+}
+
+function OnlineBadge({ status }: { status: OnlineStatus }) {
+  if (status === "inactive") {
+    return (
+      <div className="flex gap-2 items-center">
+        <div className="h-6 w-6 bg-yellow-700 rounded-full" />
+        <span>{status}</span>
+      </div>
+    );
+  }
+
+  if (status === "submit") {
+    return (
+      <div className="flex gap-2 items-center">
+        <CircleCheck className="text-cyan-700" />
+        <span>{status}</span>
+      </div>
+    );
+  }
+
+  if (status === "editing") {
+    return (
+      <div className="flex gap-2 items-center">
+        <div className="h-6 w-6 bg-green-700 rounded-full" />
+        <span>{status}</span>
+      </div>
+    );
+  }
+
+  return;
 }

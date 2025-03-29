@@ -1,6 +1,7 @@
 "use client";
 
 import PersonalForm from "@/components/patient-form/personal-form";
+import { OnlineStatus } from "@/type/online_status";
 import { Patient } from "@/type/patient";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
@@ -31,31 +32,24 @@ export default function PatientForm() {
     religion: null,
   });
 
-  const [userStatus, setUserStatus] = useState<
-    "submit" | "editing" | "inactive"
-  >("inactive");
+  const [userStatus, setUserStatus] = useState<OnlineStatus>("inactive");
+  const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean>(false);
 
   // init presense subscription
   useEffect(() => {
     const channel = supabase.channel("tracking");
 
-    channel
-      .on("presence", { event: "sync" }, () => {
-        console.log("sync", channel.presenceState());
-      })
-      .on("presence", { event: "join" }, ({ key, newPresences }) => {
-        console.log("join", key, newPresences);
-      })
-      .subscribe(async (status) => {
-        if (status === "SUBSCRIBED") {
-          const user = {
-            user: "patient",
-            status: "inactive",
-          };
+    channel.subscribe(async (status) => {
+      if (status === "SUBSCRIBED") {
+        const user = {
+          user: "patient",
+          id: id,
+          status: "inactive",
+        };
 
-          await channel.track(user);
-        }
-      });
+        await channel.track(user);
+      }
+    });
 
     channelRef.current = channel;
 
@@ -64,66 +58,63 @@ export default function PatientForm() {
     };
   }, []);
 
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
-  //   console.log(e.target);
+    const formData = new FormData(e.target as HTMLFormElement);
+    const first_name = formData.get("firstName");
+    const middle_name = formData.get("middleName");
+    const last_name = formData.get("lastName");
+    const date_of_birth = formData.get("dateOfBirth");
+    const gender = formData.get("gender");
+    const phone_number = formData.get("phoneNumber");
+    const email = formData.get("email");
+    const address = formData.get("address");
+    const preferred_language = formData.get("preferredLang");
+    const nationality = formData.get("nationality");
+    const emergency_contact_name = formData.get("emergencyContactName");
+    const emergency_contact_relationship = formData.get(
+      "emergencyContactRelationship"
+    );
+    const religion = formData.get("religion");
 
-  //   const formData = new FormData(e.target as HTMLFormElement);
-  //   const first_name = formData.get("firstName");
-  //   const middle_name = formData.get("middleName");
-  //   const last_name = formData.get("lastName");
-  //   const date_of_birth = formData.get("dateOfBirth");
-  //   const gender = formData.get("gender");
-  //   const phone_number = formData.get("phoneNumber");
-  //   const email = formData.get("email");
-  //   const address = formData.get("address");
-  //   const preferred_language = formData.get("preferredLang");
-  //   const nationality = formData.get("nationality");
-  //   const emegency_contact_name = formData.get("emergencyContactName");
-  //   const emegency_contact_relationship = formData.get(
-  //     "emergencyContactRelationship"
-  //   );
-  //   const religion = formData.get("religion");
+    const payload = {
+      first_name,
+      middle_name,
+      last_name,
+      date_of_birth,
+      gender,
+      phone_number,
+      email,
+      address,
+      preferred_language,
+      nationality,
+      emergency_contact_name,
+      emergency_contact_relationship,
+      religion,
+    };
 
-  //   const payload = {
-  //     first_name,
-  //     middle_name,
-  //     last_name,
-  //     date_of_birth,
-  //     gender,
-  //     phone_number,
-  //     email,
-  //     address,
-  //     preferred_language,
-  //     nationality,
-  //     emegency_contact_name,
-  //     emegency_contact_relationship,
-  //     religion,
-  //   };
+    const { data, error } = await supabase
+      .from("patients")
+      .upsert(payload, { onConflict: "email" })
+      .eq("email", email)
+      .select("*");
 
-  //   console.log("payload", payload);
+    if (error) {
+      console.error("error", error);
+      return;
+    }
 
-  //   const { data, error } = await supabase
-  //     .from("patients")
-  //     .upsert(payload, { onConflict: "email" })
-  //     .eq("email", email)
-  //     .select("*");
-
-  //   if (error) {
-  //     console.error("error", error);
-  //     return;
-  //   }
-
-  //   console.log("data", data);
-  // };
+    console.log("data", data);
+  };
 
   const handleChange = async (e: React.ChangeEvent) => {
     const { name, value } = e.target as HTMLInputElement;
 
-    const newData = { ...formData, [name]: value.length > 0 ? value : null };
+    const newData = { ...formData, [name]: value };
 
     setFormData(newData);
+
     setUserStatus("editing");
 
     const { error } = await supabase
@@ -134,6 +125,8 @@ export default function PatientForm() {
 
     if (error) {
       console.error("error", error);
+      // need to handle other case too
+      setIsEmailDuplicate(true);
       return;
     }
 
@@ -144,6 +137,7 @@ export default function PatientForm() {
     if (userStatus !== "editing") {
       await channelRef.current?.track({
         user: "patient",
+        id: id,
         status: "editing",
       });
     }
@@ -151,6 +145,7 @@ export default function PatientForm() {
     statusRef.current = setTimeout(() => {
       channelRef.current?.track({
         user: "patient",
+        id: id,
         status: "inactive",
       });
 
@@ -159,12 +154,14 @@ export default function PatientForm() {
   };
 
   return (
-    <div>
+    <div className="w-full">
       Status: {userStatus} <br />
       <PersonalForm
         formData={formData}
         handleChange={handleChange}
+        handleSubmit={handleSubmit}
         className="mt-4"
+        emailDuplicate={isEmailDuplicate}
       />
     </div>
   );

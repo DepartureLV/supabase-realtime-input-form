@@ -1,147 +1,250 @@
 import { cn } from "@/lib/utils";
 import { Patient } from "@/type/patient";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { HTMLInputTypeAttribute, useEffect, useState } from "react";
+import { Button } from "@/components/ui/button";
+import Pill from "./pill";
 
-interface Props {
+interface PersonalFormProps {
   formData: Patient;
   handleChange?: (e: React.ChangeEvent) => void;
+  handleSubmit?: (e: React.FormEvent) => void;
   disabled?: boolean;
+  emailDuplicate?: boolean;
   className?: string;
 }
 
 export default function PersonalForm({
   formData,
   handleChange,
+  handleSubmit,
   disabled = false,
+  emailDuplicate = false,
   className,
-}: Props) {
+}: PersonalFormProps) {
   return (
     <form
-      onSubmit={(e) => {
-        e.preventDefault();
-      }}
-      className={cn("flex flex-col", className)}
+      onSubmit={handleSubmit ? handleSubmit : () => {}}
+      className={cn("grid grid-cols-1 md:grid-cols-2 gap-4 w-full", className)}
     >
-      <label htmlFor="first_name">First name:</label>
-      <input
-        type="text"
-        id="firstName"
-        name="first_name"
-        value={formData.first_name || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="first_name"
+        label={"Firt name"}
+        value={formData.first_name}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="middleName">Middle Name:</label>
-      <input
-        type="text"
-        id="middleName"
-        name="middle_name"
-        value={formData.middle_name || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="middle_name"
+        label={"Middle name"}
+        value={formData.middle_name}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
+        optional
       />
-      <label htmlFor="lastName">Last name:</label>
-      <input
-        type="text"
-        id="lastName"
-        name="last_name"
-        value={formData.last_name || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="last_name"
+        label={"Last name"}
+        value={formData.last_name}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="dateOfBirth">Date of Birth:</label>
-      <input
-        type="text"
-        id="dateOfBirth"
-        name="date_of_birth"
-        value={formData.date_of_birth || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="date_of_birth"
+        label={"Date of birth"}
+        type="date"
+        value={formData.date_of_birth}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="gender">Gender:</label>
-      <input
-        type="text"
-        id="gender"
-        name="gender"
-        value={formData.gender || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="gender"
+        label={"Gender"}
+        value={formData.gender}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="phoneNumber">Phone number:</label>
-      <input
-        type="text"
-        id="phoneNumber"
-        name="phone_number"
-        value={formData.phone_number || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="phone_number"
+        label={"Phone number"}
+        value={formData.phone_number}
+        type="tel"
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="email">Email:</label>
-      <input
-        type="text"
-        id="email"
-        name="email"
-        value={formData.email || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="email"
+        label={"Email"}
+        type="email"
+        value={formData.email}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
+        duplicate={emailDuplicate}
       />
-      <label htmlFor="address">Address:</label>
-      <input
-        type="text"
-        id="address"
-        name="address"
-        value={formData.address || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="address"
+        label={"Address"}
+        value={formData.address}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="preferredLang">Preferred Language:</label>
-      <input
-        type="text"
-        id="preferredLang"
-        name="preferred_language"
-        value={formData.preferred_language || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="preferred_language"
+        label={"Preferred language"}
+        value={formData.preferred_language}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="nationality">Nationality:</label>
-      <input
-        type="text"
-        id="nationality"
-        name="nationality"
-        value={formData.nationality || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="nationality"
+        label={"Nationality"}
+        value={formData.nationality}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
       />
-      <label htmlFor="emergencyContactName">Emergency Contact Name:</label>
-      <input
-        type="text"
-        id="emergencyContactName"
-        name="emergency_contact_name"
-        value={formData.emergency_contact_name || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor="emergency_contact_name"
+        label={"Emergency contact name"}
+        value={formData.emergency_contact_name}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
+        optional
       />
-      <label htmlFor="emergencyContactRelationship">
-        Emergency Contact Relationship:
-      </label>
-      <input
-        type="text"
-        id="emergencyContactRelationship"
-        name="emergency_contact_relationship"
-        value={formData.emergency_contact_relationship || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor={"emergency_contact_relationship"}
+        label={"Emergency contact relationship"}
+        value={formData.emergency_contact_relationship}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
+        optional
       />
-      <label htmlFor="religion">Religion:</label>
-      <input
-        type="text"
-        id="religion"
-        name="religion"
-        value={formData.religion || ""}
-        onChange={handleChange ? handleChange : () => {}}
-        readOnly={disabled}
+      <LabelInput
+        htmlFor={"religion"}
+        label={"Religion"}
+        value={formData.religion}
+        handleChange={handleChange ? handleChange : () => {}}
+        disabled={disabled}
+        optional
       />
 
-      <button type="submit">Submit</button>
+      {!disabled && (
+        <Button type="submit" className="col-span-1 md:col-span-2">
+          Submit
+        </Button>
+      )}
     </form>
+  );
+}
+
+interface LabelCombination {
+  label: string;
+  value: string | null;
+  optional?: boolean;
+  handleChange?: (e: React.ChangeEvent) => void;
+  type?: HTMLInputTypeAttribute;
+  disabled?: boolean;
+  className?: string;
+  htmlFor: keyof Patient;
+  duplicate?: boolean;
+}
+
+const LabelInput = ({
+  label,
+  value,
+  optional,
+  handleChange,
+  type = "text",
+  disabled,
+  htmlFor,
+  className,
+  duplicate,
+}: LabelCombination) => {
+  const [isValid, setIsValid] = useState(false);
+  const [customMessage, setCustomMessage] = useState("Require");
+
+  const checkValidity = (
+    value: string | null
+  ): { validity: boolean; message: string } => {
+    if (type === "email") {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return {
+        validity: emailRegex.test(value || ""),
+        message: (value || "").length > 0 ? "Invalid email" : "Required",
+      };
+    }
+
+    if (type === "tel") {
+      const phoneRegex = /^(?:\+66|66|0)?([689]{1})\d{8}$/;
+      return {
+        validity: phoneRegex.test(value || ""),
+        message: (value || "").length > 0 ? "Invalid phone number" : "Required",
+      };
+    }
+
+    return { validity: (value || "").length > 0, message: "Required" };
+  };
+
+  useEffect(() => {
+    const { validity, message } = checkValidity(value);
+
+    if (duplicate && validity) {
+      setIsValid(false);
+      setCustomMessage("Already in use");
+      return;
+    }
+
+    setIsValid(validity);
+    setCustomMessage(message);
+  }, [value, duplicate]);
+
+  return (
+    <div className={cn("flex flex-col gap-4 w-full", className)}>
+      <div className="h-6 w-full flex items-center">
+        <Label htmlFor={htmlFor} className="w-full text-wrap flex-1">
+          {label}:
+        </Label>
+        <Message
+          optional={optional}
+          isValid={isValid}
+          disabled={disabled}
+          customMessage={customMessage}
+        />
+      </div>
+      <Input
+        type={type}
+        id={htmlFor}
+        name={htmlFor}
+        value={value || ""}
+        onChange={handleChange}
+        readOnly={disabled}
+        required={!optional}
+        className="peer"
+        placeholder=""
+        // pattern={pattern?.toString()}
+      />
+    </div>
+  );
+};
+
+interface MessageProps {
+  optional?: boolean;
+  isValid: boolean;
+  disabled?: boolean;
+  customMessage: string;
+}
+
+function Message({ optional, isValid, disabled, customMessage }: MessageProps) {
+  if (disabled || isValid) return;
+
+  if (optional) {
+    return <span className="text-muted-foreground italic">Optional</span>;
+  }
+
+  return (
+    <Pill
+      className="peer-[&:not(:placeholder-shown):not(:focus):invalid]:block"
+      message={customMessage}
+    />
   );
 }
