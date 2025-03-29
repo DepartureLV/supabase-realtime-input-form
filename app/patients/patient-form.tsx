@@ -78,7 +78,7 @@ export default function PatientForm() {
     );
     const religion = formData.get("religion");
 
-    const payload = {
+    const postgresPayload = {
       first_name,
       middle_name,
       last_name,
@@ -94,9 +94,9 @@ export default function PatientForm() {
       religion,
     };
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("patients")
-      .upsert(payload, { onConflict: "email" })
+      .upsert(postgresPayload, { onConflict: "email" })
       .eq("email", email)
       .select("*");
 
@@ -105,7 +105,18 @@ export default function PatientForm() {
       return;
     }
 
-    console.log("data", data);
+    const presencePayload: { user: string; id: string; status: OnlineStatus } =
+      {
+        user: "patient",
+        id: id,
+        status: "submitted",
+      };
+
+    await channelRef.current?.track(presencePayload);
+
+    if (statusRef.current) {
+      clearTimeout(statusRef.current);
+    }
   };
 
   const handleChange = async (e: React.ChangeEvent) => {

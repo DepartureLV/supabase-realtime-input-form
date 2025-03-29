@@ -1,1 +1,1 @@
-export type OnlineStatus = "submit" | "editing" | "inactive";
+export type OnlineStatus = "submitted" | "editing" | "inactive";
