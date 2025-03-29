@@ -57,7 +57,7 @@ export default function PersonalForm({
     >
       <LabelInput
         htmlFor="first_name"
-        label={"Firt name"}
+        label={"First name"}
         value={formData.first_name}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
