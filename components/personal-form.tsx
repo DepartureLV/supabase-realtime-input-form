@@ -23,6 +23,33 @@ export default function PersonalForm({
   emailDuplicate = false,
   className,
 }: PersonalFormProps) {
+  const [fieldsValidity, setFieldsValidity] = useState<Record<string, boolean>>(
+    {}
+  );
+
+  const isFormValid = () => {
+    const requiredFields: (keyof Patient)[] = [
+      "first_name",
+      "last_name",
+      "date_of_birth",
+      "gender",
+      "phone_number",
+      "email",
+      "address",
+      "preferred_language",
+      "nationality",
+    ];
+
+    return requiredFields.every((field) => fieldsValidity[field] === true);
+  };
+
+  const updateFieldValidity = (field: string, isValid: boolean) => {
+    setFieldsValidity((prev) => ({
+      ...prev,
+      [field]: isValid,
+    }));
+  };
+
   return (
     <form
       onSubmit={handleSubmit ? handleSubmit : () => {}}
@@ -34,6 +61,7 @@ export default function PersonalForm({
         value={formData.first_name}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="middle_name"
@@ -41,6 +69,7 @@ export default function PersonalForm({
         value={formData.middle_name}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
         optional
       />
       <LabelInput
@@ -49,6 +78,7 @@ export default function PersonalForm({
         value={formData.last_name}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="date_of_birth"
@@ -57,6 +87,7 @@ export default function PersonalForm({
         value={formData.date_of_birth}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="gender"
@@ -64,6 +95,7 @@ export default function PersonalForm({
         value={formData.gender}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="phone_number"
@@ -72,6 +104,7 @@ export default function PersonalForm({
         type="tel"
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="email"
@@ -80,6 +113,7 @@ export default function PersonalForm({
         value={formData.email}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
         duplicate={emailDuplicate}
       />
       <LabelInput
@@ -88,6 +122,7 @@ export default function PersonalForm({
         value={formData.address}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="preferred_language"
@@ -95,6 +130,7 @@ export default function PersonalForm({
         value={formData.preferred_language}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="nationality"
@@ -102,6 +138,7 @@ export default function PersonalForm({
         value={formData.nationality}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
       />
       <LabelInput
         htmlFor="emergency_contact_name"
@@ -109,6 +146,7 @@ export default function PersonalForm({
         value={formData.emergency_contact_name}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
         optional
       />
       <LabelInput
@@ -117,6 +155,7 @@ export default function PersonalForm({
         value={formData.emergency_contact_relationship}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
         optional
       />
       <LabelInput
@@ -125,11 +164,16 @@ export default function PersonalForm({
         value={formData.religion}
         handleChange={handleChange ? handleChange : () => {}}
         disabled={disabled}
+        updateValidity={updateFieldValidity}
         optional
       />
 
       {!disabled && (
-        <Button type="submit" className="col-span-1 md:col-span-2">
+        <Button
+          type="submit"
+          className="col-span-1 md:col-span-2"
+          disabled={!isFormValid()}
+        >
           Submit
         </Button>
       )}
@@ -147,6 +191,7 @@ interface LabelCombination {
   className?: string;
   htmlFor: keyof Patient;
   duplicate?: boolean;
+  updateValidity?: (field: string, isValid: boolean) => void;
 }
 
 const LabelInput = ({
@@ -159,6 +204,7 @@ const LabelInput = ({
   htmlFor,
   className,
   duplicate,
+  updateValidity,
 }: LabelCombination) => {
   const [isValid, setIsValid] = useState(false);
   const [customMessage, setCustomMessage] = useState("Require");
@@ -196,6 +242,14 @@ const LabelInput = ({
 
     setIsValid(validity);
     setCustomMessage(message);
+
+    if (updateValidity) {
+      if (optional && (!value || value.length === 0)) {
+        updateValidity(htmlFor, true);
+      } else {
+        updateValidity(htmlFor, validity);
+      }
+    }
   }, [value, duplicate]);
 
   return (
