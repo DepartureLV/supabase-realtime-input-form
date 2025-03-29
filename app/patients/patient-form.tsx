@@ -1,6 +1,6 @@
 "use client";
 
-import PersonalForm from "@/components/patient-form/personal-form";
+import PersonalForm from "@/components/personal-form";
 import { OnlineStatus } from "@/type/online_status";
 import { Patient } from "@/type/patient";
 import { createClient } from "@/utils/supabase/client";

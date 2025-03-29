@@ -6,7 +6,7 @@ export default async function Patient() {
   const { data } = await supabase.from("patients").select("*");
 
   return (
-    <div>
+    <div className="w-full">
       <RealtimeForm serverPosts={data ?? []} />
     </div>
   );
