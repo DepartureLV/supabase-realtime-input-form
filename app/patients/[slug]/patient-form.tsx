@@ -18,8 +18,6 @@ export default function PatientForm({
   const statusRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const channelRef = useRef<RealtimeChannel>(null);
 
-  // const id = uuidv4();
-
   const [formData, setFormData] = useState<Patient>({
     id: id,
     first_name: defaultValue[0]?.first_name || null,
@@ -64,6 +62,7 @@ export default function PatientForm({
     };
   }, []);
 
+  // no need to extract function as it bind to this form only
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -127,6 +126,7 @@ export default function PatientForm({
     }
   };
 
+  // no need to extract function as it bind to this form only
   const handleChange = async (e: React.ChangeEvent) => {
     const { name, value } = e.target as HTMLInputElement;
 

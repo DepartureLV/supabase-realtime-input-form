@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
-import PatientForm from "../patient-form";
+import PatientForm from "./patient-form";
 import BackButton from "@/components/back-button";
 
 export default async function Patient({

@@ -33,26 +33,24 @@ export default function RealtimeCardList({
 
   return (
     <div className="w-full">
-      <div className="w-full">
-        <h1 className="text-5xl font-extrabold text-primary">Patient List</h1>
+      <h1 className="text-5xl font-extrabold text-primary">Patient List</h1>
 
-        {data?.length === 0 && (
-          <p className="w-full text-center py-24">No data</p>
-        )}
+      {data?.length === 0 && (
+        <p className="w-full text-center py-24">No data</p>
+      )}
 
-        <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
-          {data?.map((patient) => (
-            <li key={patient.id}>
-              <PatientCard
-                id={patient.id}
-                name={patient.first_name}
-                user={"staff"}
-                submitted={patient.has_submitted}
-              />
-            </li>
-          ))}
-        </ul>
-      </div>
+      <ul className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-12">
+        {data?.map((patient) => (
+          <li key={patient.id}>
+            <PatientCard
+              id={patient.id}
+              name={patient.first_name}
+              user={"staff"}
+              submitted={patient.has_submitted}
+            />
+          </li>
+        ))}
+      </ul>
     </div>
   );
 }
