@@ -6,30 +6,36 @@ import { Patient } from "@/types/patient";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";
-import { v4 as uuidv4 } from "uuid";
 
-export default function PatientForm() {
+export default function PatientForm({
+  id,
+  defaultValue,
+}: {
+  id: string;
+  defaultValue: Patient[];
+}) {
   const supabase = createClient();
   const statusRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const channelRef = useRef<RealtimeChannel>(null);
 
-  const id = uuidv4();
+  // const id = uuidv4();
 
   const [formData, setFormData] = useState<Patient>({
     id: id,
-    first_name: null,
-    middle_name: null,
-    last_name: null,
-    date_of_birth: null,
-    gender: null,
-    phone_number: null,
-    email: null,
-    address: null,
-    preferred_language: null,
-    nationality: null,
-    emergency_contact_name: null,
-    emergency_contact_relationship: null,
-    religion: null,
+    first_name: defaultValue[0]?.first_name || null,
+    middle_name: defaultValue[0]?.middle_name || null,
+    last_name: defaultValue[0]?.last_name || null,
+    date_of_birth: defaultValue[0]?.date_of_birth || null,
+    gender: defaultValue[0]?.gender || null,
+    phone_number: defaultValue[0]?.phone_number || null,
+    email: defaultValue[0]?.email || null,
+    address: defaultValue[0]?.address || null,
+    preferred_language: defaultValue[0]?.preferred_language || null,
+    nationality: defaultValue[0]?.nationality || null,
+    emergency_contact_name: defaultValue[0]?.emergency_contact_name || null,
+    emergency_contact_relationship:
+      defaultValue[0]?.emergency_contact_relationship || null,
+    religion: defaultValue[0]?.religion || null,
   });
 
   const [userStatus, setUserStatus] = useState<OnlineStatus>("inactive");
@@ -62,21 +68,22 @@ export default function PatientForm() {
     e.preventDefault();
 
     const formData = new FormData(e.target as HTMLFormElement);
-    const first_name = formData.get("firstName");
-    const middle_name = formData.get("middleName");
-    const last_name = formData.get("lastName");
-    const date_of_birth = formData.get("dateOfBirth");
+    const first_name = formData.get("first_name");
+    const middle_name = formData.get("middle_name");
+    const last_name = formData.get("last_name");
+    const date_of_birth = formData.get("date_of_birth");
     const gender = formData.get("gender");
-    const phone_number = formData.get("phoneNumber");
+    const phone_number = formData.get("phone_number");
     const email = formData.get("email");
     const address = formData.get("address");
-    const preferred_language = formData.get("preferredLang");
+    const preferred_language = formData.get("preferred_language");
     const nationality = formData.get("nationality");
-    const emergency_contact_name = formData.get("emergencyContactName");
+    const emergency_contact_name = formData.get("emergency_contact_name");
     const emergency_contact_relationship = formData.get(
-      "emergencyContactRelationship"
+      "emergency_contact_relationship"
     );
     const religion = formData.get("religion");
+    const has_submitted = true;
 
     const postgresPayload = {
       first_name,
@@ -92,6 +99,7 @@ export default function PatientForm() {
       emergency_contact_name,
       emergency_contact_relationship,
       religion,
+      has_submitted,
     };
 
     const { error } = await supabase
