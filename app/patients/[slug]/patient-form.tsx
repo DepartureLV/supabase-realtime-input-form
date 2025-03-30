@@ -68,8 +68,6 @@ export default function PatientForm({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    console.log("start submitting...");
-
     setSubmitStatus("loading");
 
     const formData = new FormData(e.target as HTMLFormElement);
