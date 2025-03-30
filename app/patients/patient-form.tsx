@@ -174,7 +174,6 @@ export default function PatientForm({
 
   return (
     <div className="w-full">
-      Status: {userStatus} <br />
       <PersonalForm
         formData={formData}
         handleChange={handleChange}

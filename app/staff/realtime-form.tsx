@@ -42,7 +42,6 @@ export default function RealtimeForm({
         }
 
         setStatus(patientStatus[0].status);
-        console.log(patientStatus);
       })
       .subscribe();
 
@@ -59,7 +58,6 @@ export default function RealtimeForm({
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "patients" },
         (payload) => {
-          console.log("payload", { payload });
           setPatientData((prev) => [...prev, payload.new as Patient]);
         }
       )
@@ -80,7 +78,6 @@ export default function RealtimeForm({
         "postgres_changes",
         { event: "DELETE", schema: "public", table: "patients" },
         (payload) => {
-          console.log("delete", { payload });
           setPatientData((prev) => prev.filter((p) => p.id !== payload.old.id));
         }
       )
