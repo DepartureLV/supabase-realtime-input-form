@@ -169,7 +169,7 @@ export default function PatientForm({
       });
 
       setUserStatus("inactive");
-    }, 3000);
+    }, 10000);
   };
 
   return (
