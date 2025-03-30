@@ -1,4 +1,5 @@
-import PatientCard from "@/components/patient-card";
+export const dynamic = "force-dynamic";
+
 import { createClient } from "@/utils/supabase/client";
 import RealtimeCardList from "./realtime-card-list";
 
