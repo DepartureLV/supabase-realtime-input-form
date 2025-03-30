@@ -289,11 +289,11 @@ interface MessageProps {
 }
 
 function Message({ optional, isValid, disabled, customMessage }: MessageProps) {
-  if (disabled || isValid) return;
-
   if (optional) {
     return <span className="text-muted-foreground italic">Optional</span>;
   }
+
+  if (disabled || isValid) return;
 
   return (
     <Pill
