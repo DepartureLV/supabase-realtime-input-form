@@ -3,6 +3,7 @@
 import PersonalForm from "@/components/personal-form";
 import { OnlineStatus } from "@/types/online_status";
 import { Patient } from "@/types/patient";
+import { SubmitStatus } from "@/types/submit_status";
 import { createClient } from "@/utils/supabase/client";
 import { RealtimeChannel } from "@supabase/supabase-js";
 import { useEffect, useRef, useState } from "react";
@@ -35,6 +36,7 @@ export default function PatientForm({
       defaultValue[0]?.emergency_contact_relationship || null,
     religion: defaultValue[0]?.religion || null,
   });
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>("idle");
 
   const [userStatus, setUserStatus] = useState<OnlineStatus>("inactive");
   const [isEmailDuplicate, setIsEmailDuplicate] = useState<boolean>(false);
@@ -65,6 +67,10 @@ export default function PatientForm({
   // no need to extract function as it bind to this form only
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+    console.log("start submitting...");
+
+    setSubmitStatus("loading");
 
     const formData = new FormData(e.target as HTMLFormElement);
     const first_name = formData.get("first_name");
@@ -109,6 +115,16 @@ export default function PatientForm({
 
     if (error) {
       console.error("error", error);
+
+      // to not feel janky if loading too fast
+      setTimeout(() => {
+        setSubmitStatus("failed");
+      }, 1000);
+
+      // set back to idle state
+      setTimeout(() => {
+        setSubmitStatus("idle");
+      }, 3000);
       return;
     }
 
@@ -124,6 +140,16 @@ export default function PatientForm({
     if (statusRef.current) {
       clearTimeout(statusRef.current);
     }
+
+    // to not feel janky if loading too fast
+    setTimeout(() => {
+      setSubmitStatus("success");
+    }, 1000);
+
+    // set back to idle state
+    setTimeout(() => {
+      setSubmitStatus("idle");
+    }, 3000);
   };
 
   // no need to extract function as it bind to this form only
@@ -180,6 +206,7 @@ export default function PatientForm({
         handleSubmit={handleSubmit}
         className="mt-4"
         emailDuplicate={isEmailDuplicate}
+        submitStatus={submitStatus}
       />
     </div>
   );

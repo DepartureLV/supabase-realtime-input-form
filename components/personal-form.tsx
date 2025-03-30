@@ -1,10 +1,9 @@
 import { cn } from "@/lib/utils";
 import { Patient } from "@/types/patient";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { HTMLInputTypeAttribute, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import Pill from "./pill";
+import { useState } from "react";
+import { SubmitStatus } from "@/types/submit_status";
+import MultipleStateButton from "./multiple-state-button";
+import LabelInput from "./label-input-combo";
 
 interface PersonalFormProps {
   formData: Patient;
@@ -13,6 +12,7 @@ interface PersonalFormProps {
   disabled?: boolean;
   emailDuplicate?: boolean;
   className?: string;
+  submitStatus?: SubmitStatus;
 }
 
 export default function PersonalForm({
@@ -22,6 +22,7 @@ export default function PersonalForm({
   disabled = false,
   emailDuplicate = false,
   className,
+  submitStatus = "idle",
 }: PersonalFormProps) {
   const [fieldsValidity, setFieldsValidity] = useState<Record<string, boolean>>(
     {}
@@ -169,136 +170,8 @@ export default function PersonalForm({
       />
 
       {!disabled && (
-        <Button
-          type="submit"
-          className="col-span-1 md:col-span-2"
-          disabled={!isFormValid()}
-        >
-          Submit
-        </Button>
+        <MultipleStateButton status={submitStatus} disabled={!isFormValid()} />
       )}
     </form>
-  );
-}
-
-interface LabelCombination {
-  label: string;
-  value: string | null;
-  optional?: boolean;
-  handleChange?: (e: React.ChangeEvent) => void;
-  type?: HTMLInputTypeAttribute;
-  disabled?: boolean;
-  className?: string;
-  htmlFor: keyof Patient;
-  duplicate?: boolean;
-  updateValidity?: (field: string, isValid: boolean) => void;
-}
-
-const LabelInput = ({
-  label,
-  value,
-  optional,
-  handleChange,
-  type = "text",
-  disabled,
-  htmlFor,
-  className,
-  duplicate,
-  updateValidity,
-}: LabelCombination) => {
-  const [isValid, setIsValid] = useState(false);
-  const [customMessage, setCustomMessage] = useState("Require");
-
-  const checkValidity = (
-    value: string | null
-  ): { validity: boolean; message: string } => {
-    if (type === "email") {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      return {
-        validity: emailRegex.test(value || ""),
-        message: (value || "").length > 0 ? "Invalid email" : "Required",
-      };
-    }
-
-    if (type === "tel") {
-      const phoneRegex = /^(?:\+66|66|0)?([689]{1})\d{8}$/;
-      return {
-        validity: phoneRegex.test(value || ""),
-        message: (value || "").length > 0 ? "Invalid phone number" : "Required",
-      };
-    }
-
-    return { validity: (value || "").length > 0, message: "Required" };
-  };
-
-  useEffect(() => {
-    const { validity, message } = checkValidity(value);
-
-    if (duplicate && validity) {
-      setIsValid(false);
-      setCustomMessage("Already in use");
-      return;
-    }
-
-    setIsValid(validity);
-    setCustomMessage(message);
-
-    if (updateValidity) {
-      if (optional && (!value || value.length === 0)) {
-        updateValidity(htmlFor, true);
-      } else {
-        updateValidity(htmlFor, validity);
-      }
-    }
-  }, [value, duplicate]);
-
-  return (
-    <div className={cn("flex flex-col gap-4 w-full", className)}>
-      <div className="h-6 w-full flex items-center">
-        <Label htmlFor={htmlFor} className="w-full text-wrap flex-1">
-          {label}:
-        </Label>
-        <Message
-          optional={optional}
-          isValid={isValid}
-          disabled={disabled}
-          customMessage={customMessage}
-        />
-      </div>
-      <Input
-        type={type}
-        id={htmlFor}
-        name={htmlFor}
-        value={value || ""}
-        onChange={handleChange}
-        readOnly={disabled}
-        required={!optional}
-        className="peer"
-        placeholder=""
-        // pattern={pattern?.toString()}
-      />
-    </div>
-  );
-};
-
-interface MessageProps {
-  optional?: boolean;
-  isValid: boolean;
-  disabled?: boolean;
-  customMessage: string;
-}
-
-function Message({ optional, isValid, disabled, customMessage }: MessageProps) {
-  if (optional) {
-    return <span className="text-muted-foreground italic">Optional</span>;
-  }
-
-  if (disabled || isValid) return;
-
-  return (
-    <Pill
-      className="peer-[&:not(:placeholder-shown):not(:focus):invalid]:block"
-      message={customMessage}
-    />
   );
 }
