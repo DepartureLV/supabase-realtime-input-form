@@ -90,16 +90,20 @@ You can view a fully working demo at [supabase-realtime-input-form.vercel.app](h
 ## Project-structure
 ```
 📦 project-root/
- ┣ 📂 app/               # NextJS App Router
- ┃ ┣ 📂 pages/           # Page-level components (Patient, Staff)
+ | 📂 app/               # application layer containing:
+ ┃ ┣ 📂 routes/          # application routes (Patient, Staff)
+ ┃ ┃ ┣ 📂 components/    # components scoped to a specific feature
+ ┃ ┃ ┣ 📄 page.tsx/      # pages Router
  ┃ ┣ 📄 globals.css      # CSS variable setup for Tailwind
- ┃ ┣ 📄 layout/          # Global layout
- ┣ 📂 components/        # Reusable UI components that shared across project
- ┣ 📂 public/            # Static assets (images, favicon, etc.)
- ┣ 📂 type/              # type to share across project
- ┣ 📂 utils/             # utility (mainly used for supabase)
- ┣ 📄 package.json       # Dependencies and scripts
- ┣ 📄 README.md          # Project documentation
+ ┃ ┣ 📄 app.tsx          # main application component
+ ┃ ┣ 📄 layout.tsx       # main layout
+ ┣ 📂 components/        # shared components used across the entire application
+ ┣ 📂 lib/               # reusable libraries preconfigured for the application
+ ┣ 📂 public/            # static assets (images, favicon, etc.)
+ ┣ 📂 type/              # shared types used across the application
+ ┣ 📂 utils/             # shared utility functions (mainly used for supabase)
+ ┣ 📄 package.json       # dependencies and scripts
+ ┣ 📄 README.md          # project documentation
  ┗ 📄 .gitignore         # Ignored files for Git
 ```
 
@@ -116,6 +120,21 @@ Based on Atomic Design
 2. **Molecules** - Small components groups (Back-button, Label-input-combo, card) will be inside `@/components` directory
 3. **Organisms** - Larger UI section that consist multiple Molecules (Patient-Form, Card-list), will be inside each `@/app/[page]` directory, if share across multiple page, will be in `@/components`
 4. **Pages** - Fully rendered pages 
+
+Components Description
+  - Card
+    - **PatientCard** - A card to display patient data with name and status, take patient data as props
+    - **RealtimeCardList** - A list of PatientCard that can be updated in real-time and pass down patient data to `PatientCard`
+
+  - Input
+    - **LabelInput** - A combination of label and input
+    - **PersonalForm** - A base input form without ability to update
+    - **RealtimePatientForm** - A form for patient to input data and update postgres in real-time, pass updated data to `PersonalForm` 
+    - **RealtimeStaffForm** - A form for staff to view the patient data in real-time, pass updated data to `PersonalForm` 
+
+  - Button
+    - **MultipleStateButton** - A Submit button that can display multiple states base on the Request and Response (active, disabled, etc.)
+    - **BackButton** - A button to navigate back
 
 ## Real-Time Synchronization Flow
 
