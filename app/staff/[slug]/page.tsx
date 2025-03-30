@@ -1,5 +1,5 @@
 import { createClient } from "@/utils/supabase/client";
-import RealtimeForm from "./realtime-form";
+import RealtimeStaffForm from "./components/realtime-staff-form";
 import BackButton from "@/components/back-button";
 
 export default async function Patient({
@@ -14,7 +14,7 @@ export default async function Patient({
   return (
     <div className="w-full">
       <BackButton />
-      <RealtimeForm serverPosts={data ?? []} />
+      <RealtimeStaffForm serverPosts={data ?? []} />
     </div>
   );
 }

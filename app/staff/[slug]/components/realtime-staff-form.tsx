@@ -5,7 +5,7 @@ import { createClient } from "@/utils/supabase/client";
 import { useEffect, useState } from "react";
 import PersonalForm from "@/components/personal-form";
 import { OnlineStatus } from "@/types/online_status";
-import OnlineBadge from "../components/online-badge";
+import OnlineBadge from "./online-badge";
 
 type PresenceInfo = {
   presence_ref: string;
@@ -14,7 +14,7 @@ type PresenceInfo = {
   status: OnlineStatus;
 };
 
-export default function RealtimeForm({
+export default function RealtimeStaffForm({
   serverPosts,
 }: {
   serverPosts: Patient[];

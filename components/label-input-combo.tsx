@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { Patient } from "@/types/patient";
 import { HTMLInputTypeAttribute, useEffect, useState } from "react";
 import { Label } from "./ui/label";
-import Pill from "./pill";
+import Pill from "./ui/pill";
 import { Input } from "./ui/input";
 
 interface LabelCombination {

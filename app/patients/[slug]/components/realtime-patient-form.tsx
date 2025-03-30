@@ -107,7 +107,7 @@ export default function PatientForm({
     };
 
     const { error } = await supabase
-      .from("patients")
+      .from("patientssss")
       .upsert(postgresPayload, { onConflict: "email" })
       .eq("email", email)
       .select("*");
