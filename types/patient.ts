@@ -13,4 +13,5 @@ export type Patient = {
     emergency_contact_name: string | null;
     emergency_contact_relationship: string | null;
     religion: string | null;
+    has_submitted?: boolean;
   };

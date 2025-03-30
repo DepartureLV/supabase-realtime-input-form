@@ -53,7 +53,7 @@ export default function RealtimeForm({
   // Realtime DB updates
   useEffect(() => {
     const channel = supabase
-      .channel("db-changes")
+      .channel("db-changes-info")
       .on(
         "postgres_changes",
         { event: "INSERT", schema: "public", table: "patients" },
@@ -94,9 +94,12 @@ export default function RealtimeForm({
         <span className="font-semibold">Patient status </span>
         <OnlineBadge status={status} />
       </div>
-      {patientsData.map((p) => (
-        <PersonalForm key={p.id} formData={p} disabled />
-      ))}
+
+      <PersonalForm
+        key={patientsData[0].id}
+        formData={patientsData[0]}
+        disabled
+      />
     </div>
   );
 }

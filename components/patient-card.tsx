@@ -8,7 +8,7 @@ export default function PatientCard({
   submitted,
 }: {
   id: string;
-  name?: string;
+  name?: string | null;
   user: "patients" | "staff";
   submitted?: boolean;
 }) {
