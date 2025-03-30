@@ -1,76 +1,63 @@
-<a href="https://demo-nextjs-with-supabase.vercel.app/">
-  <img alt="Next.js and Supabase Starter Kit - the fastest way to build apps with Next.js and Supabase" src="https://demo-nextjs-with-supabase.vercel.app/opengraph-image.png">
-  <h1 align="center">Next.js and Supabase Starter Kit</h1>
-</a>
+# Next.js and Supabase Realtime input form</h1>
+
 
 <p align="center">
- The fastest way to build apps with Next.js and Supabase
+ Realtime input form with staff viewing system
 </p>
 
 <p align="center">
   <a href="#features"><strong>Features</strong></a> ·
   <a href="#demo"><strong>Demo</strong></a> ·
-  <a href="#deploy-to-vercel"><strong>Deploy to Vercel</strong></a> ·
   <a href="#clone-and-run-locally"><strong>Clone and run locally</strong></a> ·
+  <a href="#project-structure"><strong>Project Structure</strong></a> ·
+  <a href="#design-decision"><strong>Design</strong></a> ·
+  <a href="#component-architecture"><strong>Component architect</strong></a> ·
+  <a href="#real-time-synchronization-flow"><strong>Real-Time Synchronization flow</strong></a> ·
   <a href="#feedback-and-issues"><strong>Feedback and issues</strong></a>
-  <a href="#more-supabase-examples"><strong>More Examples</strong></a>
 </p>
 <br/>
 
 ## Features
-
-- Works across the entire [Next.js](https://nextjs.org) stack
-  - App Router
-  - Pages Router
-  - Middleware
-  - Client
-  - Server
-  - It just works!
-- supabase-ssr. A package to configure Supabase Auth to use cookies
-- Styling with [Tailwind CSS](https://tailwindcss.com)
-- Components with [shadcn/ui](https://ui.shadcn.com/)
-- Optional deployment with [Supabase Vercel Integration and Vercel deploy](#deploy-your-own)
-  - Environment variables automatically assigned to Vercel project
+- Input form with form validation
+  
+  <img width="1483" alt="Screenshot 2568-03-30 at 14 54 17" src="https://github.com/user-attachments/assets/ccc90bb4-c85c-4eea-87f7-e23e69e151b6" />
+  
+  - multiple state for submit button
+    
+  ![Screen Recording GIF 2568 Mar 30](https://github.com/user-attachments/assets/fbdb7d90-67bd-47b2-808f-54c69da1b21e)
+  ![Screen Recording GIF](https://github.com/user-attachments/assets/dc752248-0226-4132-b608-4c4e44409fe4)
+  
+- Multiple Form can be created, edited, and viewed
+  - User
+    
+    <img width="1480" alt="Screenshot 2568-03-30 at 15 04 02" src="https://github.com/user-attachments/assets/64f21938-580e-4a3d-bd78-a9cccf22342b" />
+    
+  - Staff
+    
+    <img width="1480" alt="Screenshot 2568-03-30 at 15 04 10" src="https://github.com/user-attachments/assets/3ff22648-868d-4864-9a25-9ae12ca865d9" />
+    
+- Form is sync realtime when users type in
+  
+  ![Screen Recording GIF (2)](https://github.com/user-attachments/assets/cacb1148-4484-495e-a89e-4641d1a2aecb)
+  
+- Staff can see users online status
+  
+  ![Screen Recording GIF (1)](https://github.com/user-attachments/assets/034d9198-c6e6-4c28-98b0-81495c7b9d67)
 
 ## Demo
 
-You can view a fully working demo at [demo-nextjs-with-supabase.vercel.app](https://demo-nextjs-with-supabase.vercel.app/).
+You can view a fully working demo at [supabase-realtime-input-form.vercel.app](https://supabase-realtime-input-form.vercel.app/)
 
-## Deploy to Vercel
-
-Vercel deployment will guide you through creating a Supabase account and project.
-
-After installation of the Supabase integration, all relevant environment variables will be assigned to the project so the deployment is fully functioning.
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&project-name=nextjs-with-supabase&repository-name=nextjs-with-supabase&demo-title=nextjs-with-supabase&demo-description=This+starter+configures+Supabase+Auth+to+use+cookies%2C+making+the+user%27s+session+available+throughout+the+entire+Next.js+app+-+Client+Components%2C+Server+Components%2C+Route+Handlers%2C+Server+Actions+and+Middleware.&demo-url=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2F&external-id=https%3A%2F%2Fgithub.com%2Fvercel%2Fnext.js%2Ftree%2Fcanary%2Fexamples%2Fwith-supabase&demo-image=https%3A%2F%2Fdemo-nextjs-with-supabase.vercel.app%2Fopengraph-image.png)
-
-The above will also clone the Starter kit to your GitHub, you can clone that locally and develop locally.
-
-If you wish to just develop locally and not deploy to Vercel, [follow the steps below](#clone-and-run-locally).
 
 ## Clone and run locally
 
 1. You'll first need a Supabase project which can be made [via the Supabase dashboard](https://database.new)
 
-2. Create a Next.js app using the Supabase Starter template npx command
+2. install dependencies
 
-   ```bash
-   npx create-next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   yarn create next-app --example with-supabase with-supabase-app
-   ```
-
-   ```bash
-   pnpm create next-app --example with-supabase with-supabase-app
-   ```
-
-3. Use `cd` to change into the app's directory
-
-   ```bash
-   cd with-supabase-app
-   ```
+    ```bash
+    npm install
+    ```
 
 4. Rename `.env.example` to `.env.local` and update the following:
 
@@ -89,16 +76,70 @@ If you wish to just develop locally and not deploy to Vercel, [follow the steps 
 
    The starter kit should now be running on [localhost:3000](http://localhost:3000/).
 
-6. This template comes with the default shadcn/ui style initialized. If you instead want other ui.shadcn styles, delete `components.json` and [re-install shadcn/ui](https://ui.shadcn.com/docs/installation/next)
+## Tech Stacks
+- [NextJS](https://nextjs.org/) <img src="https://img.shields.io/badge/next%20js-000000?style=for-the-badge&logo=nextdotjs&logoColor=white" />
+  - App Router
+  - Client
+  - Server
+- [Supabase](https://supabase.com/) for Database and Websockets <img src="https://img.shields.io/badge/Supabase-181818?style=for-the-badge&logo=supabase&logoColor=white" />
+- [Tailwind CSS](https://tailwindcss.com) for styling <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" />
+- [shadcn/ui](https://ui.shadcn.com/) for basic component <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=for-the-badge&logo=shadcnui&logoColor=white" />
+- [framer-motion](https://motion.dev/) for quick animation setup <img src="https://img.shields.io/badge/Framer-black?style=for-the-badge&logo=framer&logoColor=blue" />
 
-> Check out [the docs for Local Development](https://supabase.com/docs/guides/getting-started/local-development) to also run Supabase locally.
 
+## Project-structure
+```
+📦 project-root/
+ ┣ 📂 app/               # NextJS App Router
+ ┃ ┣ 📂 pages/           # Page-level components (Patient, Staff)
+ ┃ ┣ 📄 globals.css      # CSS variable setup for Tailwind
+ ┃ ┣ 📄 layout/          # Global layout
+ ┣ 📂 components/        # Reusable UI components that shared across project
+ ┣ 📂 public/            # Static assets (images, favicon, etc.)
+ ┣ 📂 type/              # type to share across project
+ ┣ 📂 utils/             # utility (mainly used for supabase)
+ ┣ 📄 package.json       # Dependencies and scripts
+ ┣ 📄 README.md          # Project documentation
+ ┗ 📄 .gitignore         # Ignored files for Git
+```
+
+## Design Decision
+1. use `grid` to managing column of inputs
+2. mobile size will be 1 cols
+3. desktop will be 2 cols
+4. reapply to another layout for consistency
+
+## Component Architecture
+Based on Atomic Design
+
+1. **Atoms** - Basic UI elements (button, input, label, pill etc.), will be inside `@/components/ui` directory
+2. **Molecules** - Small components groups (Back-button, Label-input-combo, card) will be inside `@/components` directory
+3. **Organisms** - Larger UI section that consist multiple Molecules (Patient-Form, Card-list), will be inside each `@/app/[page]` directory, if share across multiple page, will be in `@/components`
+4. **Pages** - Fully rendered pages 
+
+## Real-Time Synchronization Flow
+
+
+```mermaid
+sequenceDiagram;
+    participant Patient
+    participant Staff
+    participant SupabasePresence
+    participant SupabaseSQL
+    Patient->>SupabasePresence: Subscribe
+    Staff->>SupabasePresence: Subscribe
+    Patient->>SupabaseSQL: Input data
+    activate SupabaseSQL
+    Patient->>SupabasePresence: Online status change
+    activate SupabasePresence
+    SupabaseSQL-->>Patient: OK or DB violate!
+    SupabaseSQL-->>Staff: Here is new data?
+    deactivate SupabaseSQL
+    SupabasePresence-->>Staff: Send updated status
+    deactivate SupabasePresence
+```
+
+   
 ## Feedback and issues
 
-Please file feedback and issues over on the [Supabase GitHub org](https://github.com/supabase/supabase/issues/new/choose).
-
-## More Supabase examples
-
-- [Next.js Subscription Payments Starter](https://github.com/vercel/nextjs-subscription-payments)
-- [Cookie-based Auth and the Next.js 13 App Router (free course)](https://youtube.com/playlist?list=PL5S4mPUpp4OtMhpnp93EFSo42iQ40XjbF)
-- [Supabase Auth and the Next.js App Router](https://github.com/supabase/supabase/tree/master/examples/auth/nextjs)
+Please open issues or send feedback to nattawat.arch@gmail.com
