@@ -91,6 +91,7 @@ export default function PatientForm({
     const has_submitted = true;
 
     const postgresPayload = {
+      id,
       first_name,
       middle_name,
       last_name,
@@ -154,6 +155,9 @@ export default function PatientForm({
 
   // no need to extract function as it bind to this form only
   const handleChange = async (e: React.ChangeEvent) => {
+    // reset invalid state
+    setIsEmailDuplicate(false);
+
     const { name, value } = e.target as HTMLInputElement;
 
     const newData = { ...formData, [name]: value };
